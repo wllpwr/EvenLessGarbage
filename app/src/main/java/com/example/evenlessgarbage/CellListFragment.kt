@@ -2,7 +2,6 @@ package com.example.evenlessgarbage
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "CellListFragment"
+private const val rows = 20
+private const val columns = 20
+
 
 class CellListFragment : Fragment() {
 
@@ -25,19 +26,13 @@ class CellListFragment : Fragment() {
         ViewModelProviders.of(this).get(CellListViewModel::class.java)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total cells: ${cellListViewModel.cells.size}")
-
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_cell_list, container, false)
+        fillItUp()
         cellRecyclerView =
             view.findViewById(R.id.cell_recycler_view) as RecyclerView
         cellRecyclerView.layoutManager = GridLayoutManager(context, 20)
@@ -65,17 +60,18 @@ class CellListFragment : Fragment() {
 
         fun bind(cell: Cell) {
             this.cell = cell
-            slotTextView.text = this.cell.slot.toString()
+            slotTextView.text = this.cell.row.toString()
         }
 
         override fun onClick(p0: View?) {
             switchState(cell, slotTextView)
-            Toast.makeText(context, "${cell.slot}, ${cell.living}!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "${cell.row}, ${cell.living}!", Toast.LENGTH_SHORT).show()
             updateColony(cellListViewModel.cells)
         }
     }
 
-    private inner class CellAdapter(var cells: List<Cell>) : RecyclerView.Adapter<CellHolder>() {
+    private inner class CellAdapter(var cells: MutableList<MutableList<Cell>>) :
+        RecyclerView.Adapter<CellHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CellHolder {
             val view = LayoutInflater.from(parent.context).inflate(
@@ -87,8 +83,10 @@ class CellListFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: CellHolder, position: Int) {
-            val cell = cells[position]
-            holder.bind(cell)
+            val row = position % cells.size
+            val column = position / cells.size
+
+            holder.bind(cells[row][column])
         }
 
         override fun getItemCount() = 400
@@ -110,55 +108,62 @@ class CellListFragment : Fragment() {
         }
     }
 
-    private fun updateColony(cells: List<Cell>) {
-        val livingNeighborsCount = IntArray(400) { 0 }
+    private fun fillItUp() {
 
-        for (i in 0 until 400) {
-            val left = i - 1
-            val right = i + 1
-            val up = i - 20
-            val down = i + 20
-            val upright = up + 1
-            val upleft = up - 1
-            val downleft = down - 1
-            val downright = down + 1
-            //handles out of bounds issues
-            /*for (j in livingNeighborsCount){
 
-                if (left){
-                    livingNeighborsCount[j - 400]
-                }
-                else if (livingNeighborsCount[j] < 0){
-                    livingNeighborsCount[j + 400]
-                }
-            }
-            */
-            val allDirections = arrayOf(livingNeighborsCount[left], livingNeighborsCount[upleft],
-                livingNeighborsCount[up], livingNeighborsCount[upright], livingNeighborsCount[right],
-                livingNeighborsCount[downleft], livingNeighborsCount[down], livingNeighborsCount[downright])
-
-            // TODO: Goes out of bounds. Need to fix.
-            if (cells[i].living) {
-                for (a in allDirections){
-                    allDirections[a]++
-                }
+        for (i in 0 until rows) {
+            val something: MutableList<Cell> = mutableListOf()
+            cellListViewModel.cells.add(something)
+            for (j in 0 until columns) {
+                something.add(Cell(i, j, false))
             }
         }
-        for (i in 0 until 400) {
-            // If the cell has 4 or more living neighbors, it dies
-            // by overcrowding.
-            if (livingNeighborsCount[i] >= 4) {
-                cells[i].living = false
-            }
-            // A cell dies by exposure if it has 0 or 1 living neighbors.
-            if (livingNeighborsCount[i] < 2) {
-                cells[i].living = false
-            }
-            // A cell is born if it has 3 living neighbors.
-            if (livingNeighborsCount[i] == 3) {
-                cells[i].living = true
-            }
 
+    }
+
+    private fun updateColony(cells: MutableList<MutableList<Cell>>) {
+
+
+        val livingNeighborsCount = Array(rows) { IntArray(columns) }
+
+        for (i in 0 until rows) {
+            for (j in 0 until columns) {
+
+                val leftOfRow = i + rows - 1
+                val rightOfRow = i + 1
+                val leftOfColumn = j + columns - 1
+                val rightOfColumn = j + 1
+                if (cells[i][j].living) {
+                    livingNeighborsCount[leftOfRow % rows][leftOfColumn % columns]++
+                    livingNeighborsCount[leftOfRow % rows][j % columns]++
+                    livingNeighborsCount[(i + rows - 1) % rows][rightOfColumn % columns]++
+                    livingNeighborsCount[i % rows][leftOfColumn % columns]++
+                    livingNeighborsCount[i % rows][rightOfColumn % columns]++
+                    livingNeighborsCount[rightOfRow % rows][leftOfColumn % columns]++
+                    livingNeighborsCount[rightOfRow % rows][j % columns]++
+                    livingNeighborsCount[rightOfRow % rows][rightOfColumn % columns]++
+                }
+
+            }
+        }
+        for (i in 0 until rows) {
+            for (j in 0 until columns) {
+                // If the cell has 4 or more living neighbors, it dies
+                // by overcrowding.
+                if (livingNeighborsCount[i][j] >= 4) {
+                    cells[i][j].living = false
+                }
+
+                // A cell dies by exposure if it has 0 or 1 living neighbors.
+                if (livingNeighborsCount[i][j] < 2) {
+                    cells[i][j].living = false
+                }
+
+                // A cell is born if it has 3 living neighbors.
+                if (livingNeighborsCount[i][j] == 3) {
+                    cells[i][j].living = true
+                }
+            }
         }
     }
 }
