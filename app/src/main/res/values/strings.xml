@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">EvenLessGarbage</string>
+    <string name="starts_the_next_generation">Starts the next generation</string>
+    <string name="next_gen_completed">Next generation completed</string>
 </resources>

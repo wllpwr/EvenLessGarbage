@@ -35,11 +35,12 @@ class CellListFragment : Fragment() {
         fillItUp()
         cellRecyclerView =
             view.findViewById(R.id.cell_recycler_view) as RecyclerView
-        cellRecyclerView.layoutManager = GridLayoutManager(context, 20)
+        cellRecyclerView.layoutManager = GridLayoutManager(context, rows)
         updateUI()
+
+
         return view
     }
-
 
     private fun updateUI() {
         val cells = cellListViewModel.cells
@@ -63,6 +64,7 @@ class CellListFragment : Fragment() {
             slotTextView.text = this.cell.row.toString()
         }
 
+
         override fun onClick(p0: View?) {
             switchState(cell, slotTextView)
             Toast.makeText(context, "${cell.row}, ${cell.living}!", Toast.LENGTH_SHORT).show()
@@ -80,6 +82,7 @@ class CellListFragment : Fragment() {
                 false
             )
             return CellHolder(view)
+
         }
 
         override fun onBindViewHolder(holder: CellHolder, position: Int) {
@@ -89,7 +92,7 @@ class CellListFragment : Fragment() {
             holder.bind(cells[row][column])
         }
 
-        override fun getItemCount() = 400
+        override fun getItemCount() = rows * columns
     }
 
     companion object {
@@ -99,10 +102,10 @@ class CellListFragment : Fragment() {
     }
 
     private fun switchState(cell: Cell, slotTextView: TextView) {
-        if (cell.living) {
+        if (cell.living) { // switch cell to dead
             slotTextView.setBackgroundColor(Color.parseColor("#FFEF5350"))
             cell.living = false
-        } else {
+        } else if (!cell.living) {
             slotTextView.setBackgroundColor(Color.parseColor("#FF66BB6A"))
             cell.living = true
         }
@@ -121,11 +124,9 @@ class CellListFragment : Fragment() {
 
     }
 
-    private fun updateColony(cells: MutableList<MutableList<Cell>>) {
-
-
+    fun updateColony(cells: MutableList<MutableList<Cell>>) {
         val livingNeighborsCount = Array(rows) { IntArray(columns) }
-
+        updateUI()
         for (i in 0 until rows) {
             for (j in 0 until columns) {
 
@@ -166,4 +167,5 @@ class CellListFragment : Fragment() {
             }
         }
     }
+
 }
