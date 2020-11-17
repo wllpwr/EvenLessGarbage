@@ -2,6 +2,7 @@ package com.example.evenlessgarbage
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,13 +63,15 @@ class CellListFragment : Fragment() {
         fun bind(cell: Cell) {
             this.cell = cell
             slotTextView.text = this.cell.row.toString()
+            pulseUI(cell, slotTextView)
         }
 
 
         override fun onClick(p0: View?) {
-            switchState(cell, slotTextView)
+            cellListViewModel.switchState(cell, slotTextView)
             Toast.makeText(context, "${cell.row}, ${cell.living}!", Toast.LENGTH_SHORT).show()
-            updateColony(cellListViewModel.cells)
+            pulseUI(cell, slotTextView)
+
         }
     }
 
@@ -82,13 +85,11 @@ class CellListFragment : Fragment() {
                 false
             )
             return CellHolder(view)
-
         }
 
         override fun onBindViewHolder(holder: CellHolder, position: Int) {
             val row = position % cells.size
             val column = position / cells.size
-
             holder.bind(cells[row][column])
         }
 
@@ -101,19 +102,8 @@ class CellListFragment : Fragment() {
         }
     }
 
-    private fun switchState(cell: Cell, slotTextView: TextView) {
-        if (cell.living) { // switch cell to dead
-            slotTextView.setBackgroundColor(Color.parseColor("#FFEF5350"))
-            cell.living = false
-        } else if (!cell.living) {
-            slotTextView.setBackgroundColor(Color.parseColor("#FF66BB6A"))
-            cell.living = true
-        }
-    }
-
+    // put filler data in the cells 2d array
     private fun fillItUp() {
-
-
         for (i in 0 until rows) {
             val something: MutableList<Cell> = mutableListOf()
             cellListViewModel.cells.add(something)
@@ -124,6 +114,7 @@ class CellListFragment : Fragment() {
 
     }
 
+    // next gen
     fun updateColony(cells: MutableList<MutableList<Cell>>) {
         val livingNeighborsCount = Array(rows) { IntArray(columns) }
         updateUI()
@@ -167,5 +158,24 @@ class CellListFragment : Fragment() {
             }
         }
     }
+
+    // this could probably be a lot better
+    // pulses on update
+    fun pulseUI(cell: Cell, slotTextView: TextView) {
+        val handler = Handler()
+        fun changeToOtherColorPlease(colorString: String) {
+            handler.postDelayed({
+                slotTextView.setBackgroundColor(Color.parseColor(colorString))
+            }, 1000)
+        }
+        if (cell.living) {
+            slotTextView.setBackgroundColor(Color.parseColor("#A5D6A7")) // green light
+            changeToOtherColorPlease("#FF66BB6A") // green dark
+        } else {
+            slotTextView.setBackgroundColor(Color.parseColor("#EF9A9A")) // red light
+            changeToOtherColorPlease("#FFEF5350") // red dark
+        }
+    }
+
 
 }
