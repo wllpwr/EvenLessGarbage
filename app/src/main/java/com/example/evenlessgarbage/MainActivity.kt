@@ -2,6 +2,7 @@ package com.example.evenlessgarbage
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -20,9 +21,13 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragment_container, fragment)
                 .commit()
         }
+        val cellListViewModel: CellListViewModel by lazy {
+            ViewModelProviders.of(this).get(CellListViewModel::class.java)
+        }
         next_gen_button.setOnClickListener { view ->
             Snackbar.make(view, getString(R.string.next_gen_completed), Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show()
+            cellListViewModel.updateColony(cellListViewModel.cells)
         }
     }
 }
