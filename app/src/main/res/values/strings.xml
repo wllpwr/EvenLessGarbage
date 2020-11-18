@@ -2,4 +2,11 @@
     <string name="app_name">EvenLessGarbage</string>
     <string name="starts_the_next_generation">Starts the next generation</string>
     <string name="next_gen_completed">Next generation completed</string>
+    <string name="auto">Auto</string>
+    <string name="enabled">Enabled!</string>
+    <string name="disabled">Disabled!</string>
+    <string name="save">Save</string>
+    <string name="load">Load</string>
+    <string name="saved">Saved to disk!</string>
+    <string name="loaded">Loaded from disk!</string>
 </resources>

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.io.File
 
 private const val TAG = "CellListFragment"
 private const val rows = 20
@@ -46,6 +47,7 @@ class CellListFragment : Fragment() {
         adapter = CellAdapter(cells)
         cellRecyclerView.adapter = adapter
     }
+
 
     private inner class CellHolder(view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
@@ -100,23 +102,42 @@ class CellListFragment : Fragment() {
         }
     }
 
-
-
-    // this could probably be a lot better
-    // pulses on update
+    // pulses on update, rewrite
+    // something about this screams inefficient
     fun pulseUI(cell: Cell, slotTextView: TextView) {
-        val handler = Handler()
+        fun repeatPulse() {
+            Handler().postDelayed({
+                pulseUI(cell, slotTextView)
+            }, 100)
+        }
+
         fun changeToOtherColorPlease(colorString: String) {
-            handler.postDelayed({
+            Handler().postDelayed({
                 slotTextView.setBackgroundColor(Color.parseColor(colorString))
-            }, 1000)
+                repeatPulse()
+            }, 250)
         }
         if (cell.living) {
             slotTextView.setBackgroundColor(Color.parseColor("#A5D6A7")) // green light
             changeToOtherColorPlease("#FF66BB6A") // green dark
         } else {
-            slotTextView.setBackgroundColor(Color.parseColor("#EF9A9A")) // red light
-            changeToOtherColorPlease("#FFEF5350") // red dark
+            slotTextView.setBackgroundColor(Color.parseColor("#FFEF5350")) // red dark
         }
+    }
+
+    // passthrough functions, allows MainActivity to communicate with CellListViewModel
+    fun updateColonyPassthrough() {
+        cellListViewModel.updateColony()
+        cellRecyclerView.adapter?.notifyDataSetChanged()
+    }
+
+    fun savePassthrough(file: File) {
+        cellListViewModel.save(file)
+        Toast.makeText(context, getString(R.string.saved), Toast.LENGTH_SHORT).show()
+    }
+
+    fun loadPassthrough(file: File) {
+        cellListViewModel.load(file)
+        Toast.makeText(context, getString(R.string.loaded), Toast.LENGTH_SHORT).show()
     }
 }

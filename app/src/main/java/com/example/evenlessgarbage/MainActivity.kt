@@ -1,33 +1,68 @@
 package com.example.evenlessgarbage
 
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 
 
 class MainActivity : AppCompatActivity() {
+
+
+    private val file = File(this.filesDir, "cells.dat")
+    var autoEnabled = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        if (!file.exists()) { // create the file if non-existent
+            file.createNewFile()
+        }
         val currentFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment == null) {
             val fragment = CellListFragment.newInstance()
+            next_gen_button.setOnClickListener {
+                fragment.updateColonyPassthrough()
+            }
+
+            auto_button.setOnClickListener {
+                autoEnabled = !autoEnabled
+                continueWithDelay(fragment)
+            }
+
+            saveButton.setOnClickListener {
+                if (!file.exists()) {
+                    file.createNewFile()
+                }
+                fragment.savePassthrough(file)
+            }
+            loadButton.setOnClickListener {
+                fragment.loadPassthrough(file)
+            }
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_container, fragment)
                 .commit()
         }
-        val cellListViewModel: CellListViewModel by lazy {
-            ViewModelProviders.of(this).get(CellListViewModel::class.java)
-        }
-        next_gen_button.setOnClickListener { view ->
-            Snackbar.make(view, getString(R.string.next_gen_completed), Snackbar.LENGTH_SHORT)
-                .setAction("Action", null).show()
-            cellListViewModel.updateColony(cellListViewModel.cells)
+
+    }
+
+    private fun continueWithDelay(fragment: CellListFragment) {
+        if (autoEnabled) {
+            auto_button.backgroundTintList =
+                ColorStateList.valueOf(resources.getColor(R.color.green_200))
+            Handler().postDelayed({
+                fragment.updateColonyPassthrough()
+                continueWithDelay(fragment)
+            }, 500)
+        } else {
+            auto_button.backgroundTintList =
+                ColorStateList.valueOf(resources.getColor(R.color.red_200))
+            autoEnabled = false
         }
     }
 }

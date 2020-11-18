@@ -1,10 +1,13 @@
 package com.example.evenlessgarbage
 
+import android.util.Log
 import android.widget.TextView
 import androidx.lifecycle.ViewModel
+import java.io.File
 
 private const val rows = 20
 private const val columns = 20
+private const val TAG = "CellListViewModel"
 
 class CellListViewModel : ViewModel() {
     var cells: MutableList<MutableList<Cell>> = mutableListOf()
@@ -21,15 +24,16 @@ class CellListViewModel : ViewModel() {
     }
 
     fun switchState(cell: Cell, slotTextView: TextView) {
-        if (cell.living) { // switch cell to dead
+        if (cell.living) { // switch cell to dead, reset its color
             cell.living = false
-        } else if (!cell.living) {
+        } else if (!cell.living) { // switch to alive
             cell.living = true
         }
     }
 
     // next gen
-    fun updateColony(cells: MutableList<MutableList<Cell>>) {
+    fun updateColony() {
+        Log.d(TAG, "Yep we called it")
         val livingNeighborsCount = Array(rows) { IntArray(columns) }
         for (i in 0 until rows) {
             for (j in 0 until columns) {
@@ -72,4 +76,13 @@ class CellListViewModel : ViewModel() {
         }
     }
 
+    fun save(file: File) {
+
+    }
+
+
+    fun load(file: File) {
+
+
+    }
 }
