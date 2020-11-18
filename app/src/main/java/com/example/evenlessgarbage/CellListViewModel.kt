@@ -75,20 +75,35 @@ class CellListViewModel : ViewModel() {
     }
     fun save(file: File) {
         file.delete()
+        file.createNewFile()
         for (i in 0 until rows) {
             for (j in 0 until columns) {
-                file.appendText(cells[i][j].living.toString() + "\n")
+                file.appendText("" + i + "\n" + j + "\n" + cells[i][j].living.toString() + "\n")
             }
         }
     }
     fun load(file: File) {
-        for (i in 0 until rows) {
-            for (j in 0 until columns) {
-                file.forEachLine {
-                    if (it.isNotEmpty()) {
-                        cells[i][j].living = it.toBoolean()
+        var what = 1
+        var row = 0
+        var column = 0
+        var status = false
+        file.forEachLine {
+            if (it.isNotEmpty()) {
+                when (what) {
+                    1 -> {
+                        row = it.toInt()
+                        what = 2
+                    }
+                    2 -> {
+                        column = it.toInt()
+                        what = 3
+                    }
+                    3 -> {
+                        status = it.toBoolean()
+                        what = 1
                     }
                 }
+                cells[row][column].living = status
             }
         }
     }
