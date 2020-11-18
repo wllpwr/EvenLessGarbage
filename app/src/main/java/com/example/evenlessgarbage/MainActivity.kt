@@ -11,7 +11,7 @@ import java.io.File
 class MainActivity : AppCompatActivity() {
 
 
-    private val file = File(this.filesDir, "cells.dat")
+    private val file = File("data/data/com.example.evenlessgarbage/cells.dat")
     var autoEnabled = false
 
 
