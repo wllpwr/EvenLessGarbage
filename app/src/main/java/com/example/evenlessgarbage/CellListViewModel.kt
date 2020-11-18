@@ -1,6 +1,5 @@
 package com.example.evenlessgarbage
 
-import android.util.Log
 import android.widget.TextView
 import androidx.lifecycle.ViewModel
 import java.io.File
@@ -33,7 +32,6 @@ class CellListViewModel : ViewModel() {
 
     // next gen
     fun updateColony() {
-        Log.d(TAG, "Yep we called it")
         val livingNeighborsCount = Array(rows) { IntArray(columns) }
         for (i in 0 until rows) {
             for (j in 0 until columns) {
@@ -75,14 +73,23 @@ class CellListViewModel : ViewModel() {
             }
         }
     }
-
     fun save(file: File) {
-
+        file.delete()
+        for (i in 0 until rows) {
+            for (j in 0 until columns) {
+                file.appendText(cells[i][j].living.toString() + "\n")
+            }
+        }
     }
-
-
     fun load(file: File) {
-
-
+        for (i in 0 until rows) {
+            for (j in 0 until columns) {
+                file.forEachLine {
+                    if (it.isNotEmpty()) {
+                        cells[i][j].living = it.toBoolean()
+                    }
+                }
+            }
+        }
     }
 }

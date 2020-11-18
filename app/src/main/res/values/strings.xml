@@ -9,4 +9,5 @@
     <string name="load">Load</string>
     <string name="saved">Saved to disk!</string>
     <string name="loaded">Loaded from disk!</string>
+    <string name="clone_to_new_activity">Clone to New Activity</string>
 </resources>

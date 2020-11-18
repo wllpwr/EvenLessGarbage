@@ -10,10 +10,8 @@ import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
-
     private val file = File("data/data/com.example.evenlessgarbage/cells.dat")
     var autoEnabled = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,13 +32,13 @@ class MainActivity : AppCompatActivity() {
                 continueWithDelay(fragment)
             }
 
-            saveButton.setOnClickListener {
+            save_button.setOnClickListener {
                 if (!file.exists()) {
                     file.createNewFile()
                 }
                 fragment.savePassthrough(file)
             }
-            loadButton.setOnClickListener {
+            load_button.setOnClickListener {
                 fragment.loadPassthrough(file)
             }
             supportFragmentManager

@@ -69,9 +69,7 @@ class CellListFragment : Fragment() {
 
         override fun onClick(p0: View?) {
             cellListViewModel.switchState(cell, slotTextView)
-            Toast.makeText(context, "${cell.row}, ${cell.living}!", Toast.LENGTH_SHORT).show()
             pulseUI(cell, slotTextView)
-
         }
     }
 
@@ -139,5 +137,6 @@ class CellListFragment : Fragment() {
     fun loadPassthrough(file: File) {
         cellListViewModel.load(file)
         Toast.makeText(context, getString(R.string.loaded), Toast.LENGTH_SHORT).show()
+        cellRecyclerView.adapter?.notifyDataSetChanged()
     }
 }
