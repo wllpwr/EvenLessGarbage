@@ -7,7 +7,15 @@
     <string name="disabled">Disabled!</string>
     <string name="save">Save</string>
     <string name="load">Load</string>
-    <string name="saved">Saved to disk!</string>
-    <string name="loaded">Loaded from disk!</string>
+    <string name="saved">Saved!</string>
+    <string name="loaded">Loaded!</string>
     <string name="clone_to_new_activity">Clone to New Activity</string>
+    <string name="make_activity">make activity</string>
+    <string name="load_activity">load activity</string>
+    <string name="make_new_activity_first">You need to make a new activity first.</string>
+    <string name="change_colors">change colors</string>
+    <string name="living_light_pulse_color">living light hex</string>
+    <string name="dead_color">dead hex (run auto)</string>
+    <string name="living_dark_pulse_color">living dark hex</string>
+    <string name="done">Done</string>
 </resources>
