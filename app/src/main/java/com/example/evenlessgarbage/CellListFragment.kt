@@ -24,6 +24,10 @@ class CellListFragment : Fragment() {
     private lateinit var cellRecyclerView: RecyclerView
     private var adapter: CellAdapter? = null
 
+    var livingLight = "#A5D6A7"
+    var livingDark = "#FF66BB6A"
+    var deadDark = "#FFEF5350"
+
     private val cellListViewModel: CellListViewModel by lazy {
         ViewModelProviders.of(this).get(CellListViewModel::class.java)
     }
@@ -68,7 +72,7 @@ class CellListFragment : Fragment() {
 
 
         override fun onClick(p0: View?) {
-            cellListViewModel.switchState(cell, slotTextView)
+            cellListViewModel.switchState(cell)
             pulseUI(cell, slotTextView)
         }
     }
@@ -101,7 +105,8 @@ class CellListFragment : Fragment() {
     }
 
     // pulses on update, rewrite
-    // something about this screams inefficient
+    // this seems really inefficient
+    // an animation would be better, but I've gotten this far already
     fun pulseUI(cell: Cell, slotTextView: TextView) {
         fun repeatPulse() {
             Handler().postDelayed({
@@ -116,12 +121,13 @@ class CellListFragment : Fragment() {
             }, 250)
         }
         if (cell.living) {
-            slotTextView.setBackgroundColor(Color.parseColor("#A5D6A7")) // green light
-            changeToOtherColorPlease("#FF66BB6A") // green dark
+            slotTextView.setBackgroundColor(Color.parseColor(livingLight)) // green light
+            changeToOtherColorPlease(livingDark) // green dark
         } else {
-            slotTextView.setBackgroundColor(Color.parseColor("#FFEF5350")) // red dark
+            slotTextView.setBackgroundColor(Color.parseColor(deadDark)) // red dark
         }
     }
+
 
     // passthrough functions, allows MainActivity to communicate with CellListViewModel
     fun updateColonyPassthrough() {
@@ -140,10 +146,28 @@ class CellListFragment : Fragment() {
         cellRecyclerView.adapter?.notifyDataSetChanged()
     }
 
-    fun checkIfCloneRequired(cloneFile: File, required: Boolean) {
-        if (required) {
-            cellListViewModel.grabOldData(cloneFile, required)
-            cellRecyclerView.adapter?.notifyDataSetChanged()
+    fun newColors(colorList: List<String>) {
+        // corrections if user does not input the pound sign at the beginning
+        if (colorList[0].isNotEmpty()) {
+            livingLight = if (colorList[0][0].toString() != "#") {
+                "#${colorList[0]}"
+            } else {
+                colorList[0]
+            }
+        }
+        if (colorList[1].isNotEmpty()) {
+            livingDark = if (colorList[1][0].toString() != "#") {
+                "#${colorList[1]}"
+            } else {
+                colorList[1]
+            }
+        }
+        if (colorList[2].isNotEmpty()) {
+            deadDark = if (colorList[2][0].toString() != "#") {
+                "#${colorList[2]}"
+            } else {
+                colorList[2]
+            }
         }
     }
 }

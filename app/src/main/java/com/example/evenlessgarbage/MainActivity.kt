@@ -21,10 +21,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (!file.exists()) { // create the file if non-existent
+        // create the file if non-existent
+        if (!file.exists()) {
             file.createNewFile()
         }
-        if (!cloneFile.exists()) { // create the file if non-existent
+        // create the file if non-existent
+        if (!cloneFile.exists()) {
             cloneFile.createNewFile()
         }
 
@@ -34,9 +36,7 @@ class MainActivity : AppCompatActivity() {
         if (currentFragment == null) {
             val fragment = CellListFragment.newInstance()
 
-            next_gen_button.setOnClickListener {
-                fragment.updateColonyPassthrough()
-            }
+            next_gen_button.setOnClickListener { fragment.updateColonyPassthrough() }
 
             auto_button.setOnClickListener {
                 autoEnabled = !autoEnabled
@@ -49,9 +49,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 fragment.savePassthrough(file)
             }
-            load_button.setOnClickListener {
-                fragment.loadPassthrough(file)
-            }
+            load_button.setOnClickListener { fragment.loadPassthrough(file) }
             save_activity.setOnClickListener {
                 fragment.savePassthrough(cloneFile)
                 val intent = Intent(this, MainActivity::class.java)
@@ -70,12 +68,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             color_button.setOnClickListener {
-                if (color_button.text != getString(R.string.done)) {
+                if (color_button.text != getString(R.string.done)) { // if button hasn't been clicked before
                     color_button.text = getString(R.string.done)
                     light_pulse.isVisible = true
                     dark_pulse.isVisible = true
                     dead_color.isVisible = true
-                } else {
+                } else { // if it has been clicked before
                     color_button.text = getString(R.string.change_colors)
                     light_pulse.isVisible = false
                     dark_pulse.isVisible = false
@@ -83,6 +81,8 @@ class MainActivity : AppCompatActivity() {
                     val lightColor = light_pulse.text.toString()
                     val darkColor = dark_pulse.text.toString()
                     val deadColor = dead_color.text.toString()
+
+
                     newColorList = listOf(lightColor, darkColor, deadColor)
                     fragment.newColors(newColorList)
                 }

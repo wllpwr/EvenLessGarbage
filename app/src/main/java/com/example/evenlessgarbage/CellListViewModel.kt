@@ -1,6 +1,5 @@
 package com.example.evenlessgarbage
 
-import android.widget.TextView
 import androidx.lifecycle.ViewModel
 import java.io.File
 
@@ -10,12 +9,6 @@ private const val TAG = "CellListViewModel"
 
 class CellListViewModel : ViewModel() {
     var cells: MutableList<MutableList<Cell>> = mutableListOf()
-
-
-    // load data from last activity
-    fun grabOldData(cloneFile: File, required: Boolean) {
-        load(cloneFile)
-    }
 
     // put filler data in the cells 2d array
     fun fillItUp() {
@@ -28,7 +21,7 @@ class CellListViewModel : ViewModel() {
         }
     }
 
-    fun switchState(cell: Cell, slotTextView: TextView) {
+    fun switchState(cell: Cell) {
         if (cell.living) { // switch cell to dead, reset its color
             cell.living = false
         } else if (!cell.living) { // switch to alive
@@ -79,6 +72,7 @@ class CellListViewModel : ViewModel() {
             }
         }
     }
+
     fun save(file: File) {
         file.delete()
         file.createNewFile()
@@ -88,6 +82,7 @@ class CellListViewModel : ViewModel() {
             }
         }
     }
+
     fun load(file: File) {
         var what = 1
         var row = 0
