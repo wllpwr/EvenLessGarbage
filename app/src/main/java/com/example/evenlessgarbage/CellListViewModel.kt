@@ -11,6 +11,12 @@ private const val TAG = "CellListViewModel"
 class CellListViewModel : ViewModel() {
     var cells: MutableList<MutableList<Cell>> = mutableListOf()
 
+
+    // load data from last activity
+    fun grabOldData(cloneFile: File, required: Boolean) {
+        load(cloneFile)
+    }
+
     // put filler data in the cells 2d array
     fun fillItUp() {
         for (i in 0 until rows) {

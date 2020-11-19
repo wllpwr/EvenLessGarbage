@@ -1,5 +1,6 @@
 package com.example.evenlessgarbage
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
@@ -11,6 +12,7 @@ import java.io.File
 class MainActivity : AppCompatActivity() {
 
     private val file = File("data/data/com.example.evenlessgarbage/cells.dat")
+    private val cloneFile = File("data/data/com.example.evenlessgarbage/clone.dat")
     var autoEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +21,10 @@ class MainActivity : AppCompatActivity() {
         if (!file.exists()) { // create the file if non-existent
             file.createNewFile()
         }
+        if (!cloneFile.exists()) { // create the file if non-existent
+            cloneFile.createNewFile()
+        }
+
         val currentFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment == null) {
@@ -41,6 +47,14 @@ class MainActivity : AppCompatActivity() {
             load_button.setOnClickListener {
                 fragment.loadPassthrough(file)
             }
+            clone_button.setOnClickListener {
+                fragment.savePassthrough(cloneFile)
+                val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("doClone?", true)
+                startActivity(intent)
+            }
+            val required = intent.getBooleanExtra("doClone?", false)
+            fragment.checkIfCloneRequired(cloneFile, required)
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_container, fragment)

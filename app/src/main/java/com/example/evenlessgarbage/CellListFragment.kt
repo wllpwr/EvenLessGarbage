@@ -139,4 +139,11 @@ class CellListFragment : Fragment() {
         Toast.makeText(context, getString(R.string.loaded), Toast.LENGTH_SHORT).show()
         cellRecyclerView.adapter?.notifyDataSetChanged()
     }
+
+    fun checkIfCloneRequired(cloneFile: File, required: Boolean) {
+        if (required) {
+            cellListViewModel.grabOldData(cloneFile, required)
+            cellRecyclerView.adapter?.notifyDataSetChanged()
+        }
+    }
 }
