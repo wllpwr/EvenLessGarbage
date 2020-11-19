@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
 
-private const val TAG = "CellListFragment"
 private const val rows = 20
 private const val columns = 20
 

@@ -5,7 +5,6 @@ import java.io.File
 
 private const val rows = 20
 private const val columns = 20
-private const val TAG = "CellListViewModel"
 
 class CellListViewModel : ViewModel() {
     var cells: MutableList<MutableList<Cell>> = mutableListOf()
