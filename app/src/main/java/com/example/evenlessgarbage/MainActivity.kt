@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             Handler().postDelayed({
                 fragment.updateColonyPassthrough()
                 continueWithDelay(fragment)
-            }, 500)
+            }, 750)
         } else {
             auto_button.backgroundTintList =
                 ColorStateList.valueOf(resources.getColor(R.color.red_200))
