@@ -8,8 +8,3 @@ Supports saving and loading layouts, activity stacking, and fancy color manipula
 ## Device support
 
 Should support API 16 (Android 4.1) and above. 
-
-## What's with the app name?
-I started from scratch twice. On that note, I can assure you that this project is even less garbage than it was before. 
-
-Should probably rename it anyways...
