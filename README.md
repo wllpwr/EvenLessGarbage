@@ -8,3 +8,6 @@ Supports saving and loading layouts, activity stacking, and fancy color manipula
 ## Device support
 
 Should support API 16 (Android 4.1) and above. 
+
+## Licensing
+This project is licensed under GNU GPL v3.
