@@ -1,4 +1,4 @@
-package com.example.evenlessgarbage
+package com.wllpwr.gameolife
 
 import androidx.lifecycle.ViewModel
 import java.io.File

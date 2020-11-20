@@ -1,4 +1,4 @@
-package com.example.evenlessgarbage
+package com.wllpwr.gameolife
 
 import android.graphics.Color
 import android.os.Bundle

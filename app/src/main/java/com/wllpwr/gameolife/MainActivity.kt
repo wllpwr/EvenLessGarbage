@@ -1,4 +1,4 @@
-package com.example.evenlessgarbage
+package com.wllpwr.gameolife
 
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -13,8 +13,8 @@ import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
-    private val file = File("data/data/com.example.evenlessgarbage/cells.dat")
-    private val cloneFile = File("data/data/com.example.evenlessgarbage/clone.dat")
+    private val file = File("data/data/com.wllpwr.gameolife/cells.dat")
+    private val cloneFile = File("data/data/com.wllpwr.gameolife/clone.dat")
     var autoEnabled = false
     private lateinit var newColorList: List<String>
 
