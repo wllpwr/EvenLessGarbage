@@ -13,8 +13,8 @@ import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
-    private val file = File("data/data/com.wllpwr.gameolife/cells.dat")
-    private val cloneFile = File("data/data/com.wllpwr.gameolife/clone.dat")
+    private val file = File("data/data/com.example.evenlessgarbage/cells.dat")
+    private val cloneFile = File("data/data/com.example.evenlessgarbage/clone.dat")
     var autoEnabled = false
     private lateinit var newColorList: List<String>
 
